@@ -1,0 +1,27 @@
+{
+  "name": "jobgenie-frontend",
+  "version": "1.0.0",
+  "description": "This repo was created for automation tools for a dream Job",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "preview": "vite preview",
+    "build": "tsc && vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fac-32/Job-Genie-Frontend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fac-32/Job-Genie-Frontend/issues"
+  },
+  "homepage": "https://github.com/fac-32/Job-Genie-Frontend#readme",
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.2.4"
+  }
+}
