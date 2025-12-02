@@ -3,11 +3,20 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://accounts.google.com/gsi/client" async defer></script>
+		<script type="module" src="./src/signIn.js"></script>
 		<title>JobGenie</title>
 	</head>
 	<body>
 		<h1>JobGenie</h1>
 		<div id="app"></div>
+		<div id="g_id_onload" data-client_id="1053566652974-1n8a3icl9qbbt76vhlh0gdcjeeo4j476.apps.googleusercontent.com"
+			data-callback="handleCredentialResponse"></div>
+		<div class="google_container">
+			<div class="g_id_signin" data-type="standard"></div>
+			<div class="userDetails"></div>
+			<div class="g_id_signout">Sign Out</div>
+		</div>
 		<script type="module" src="./dist/main.js"></script>
 	</body>
 </html>
