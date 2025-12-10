@@ -1,16 +1,22 @@
-import { useState, useEffect } from 'react';
-import CompanyProfile from './components/CompanyProfile.js';
+import { useState } from 'react';
+import CompanyOverviewModal from './components/CompanyOverviewModal';
+import JobsListModal from './components/JobsListModal';
+import JobDetailsModal from './components/JobDetailsModal';
 import { getCompanyOverview } from './services/api';
 import type { Company, Job } from './types/company.types';
 import './App.css';
+
+type ModalView = 'none' | 'company' | 'jobs' | 'jobDetails';
 
 function App() {
   // State management
   const [company, setCompany] = useState<Company | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
-  const [searchTerm, setSearchTerm] = useState('Google');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentView, setCurrentView] = useState<ModalView>('none');
 
   // Fetch company data
   const fetchCompanyData = async (companyName: string) => {
@@ -23,6 +29,7 @@ function App() {
       if (response.success) {
         setCompany(response.data.company);
         setJobs(response.data.jobs);
+        setCurrentView('company'); // Open company overview modal
       } else {
         setError('Failed to load company data');
       }
@@ -33,45 +40,36 @@ function App() {
     }
   };
 
-  // Fetch data on component mount
-  useEffect(() => {
-    fetchCompanyData(searchTerm);
-  }, []);
-
   // Handle search
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchCompanyData(searchTerm);
+    if (searchTerm.trim()) {
+      fetchCompanyData(searchTerm);
+    }
   };
 
-  // Group jobs by category
-  const categorizeJobs = (jobs: Job[]) => {
-    const categories: { [key: string]: Job[] } = {};
-    
-    jobs.forEach(job => {
-      const category = job.title.includes('Frontend') || job.title.includes('React') 
-        ? 'Frontend Development'
-        : job.title.includes('Backend') 
-        ? 'Backend Development'
-        : job.title.includes('Full Stack')
-        ? 'Full Stack Development'
-        : 'Software Engineering';
-      
-      if (!categories[category]) {
-        categories[category] = [];
-      }
-      categories[category].push(job);
-    });
-    
-    return Object.entries(categories).map(([categoryName, categoryJobs]) => ({
-      categoryName,
-      jobCount: categoryJobs.length
-    }));
+  // Modal navigation handlers
+  const handleViewJobs = () => {
+    setCurrentView('jobs');
   };
 
-  const handleCategoryClick = (categoryName: string) => {
-    console.log('Category clicked:', categoryName);
-    // TODO: Implement job details view
+  const handleSelectJob = (job: Job) => {
+    setSelectedJob(job);
+    setCurrentView('jobDetails');
+  };
+
+  const handleBackToJobs = () => {
+    setCurrentView('jobs');
+    setSelectedJob(null);
+  };
+
+  const handleBackToCompany = () => {
+    setCurrentView('company');
+  };
+
+  const handleCloseAll = () => {
+    setCurrentView('none');
+    setSelectedJob(null);
   };
 
   return (
@@ -83,47 +81,61 @@ function App() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search for a company..."
+            placeholder="Search for a company (e.g., Google, Amazon, Meta)..."
             className="search-input"
           />
-          <button type="submit" className="search-button">
-            Search
+          <button type="submit" className="search-button" disabled={loading}>
+            {loading ? 'Searching...' : 'Search'}
           </button>
         </form>
       </div>
 
-      {/* Company Profile */}
-      {company && !loading && (
-        <CompanyProfile
-          company={{
-            name: company.name,
-            description: company.description,
-            industry: company.industry,
-            size: company.size,
-            website: company.website,
-            location: 'London, UK',
-            logo: company.logo
-          }}
-          jobCategories={categorizeJobs(jobs)}
-          onCategoryClick={handleCategoryClick}
-        />
-      )}
-
-      {/* Initial Loading State */}
-      {loading && (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Loading company data...</p>
-        </div>
-      )}
-
       {/* Error State */}
-      {error && !loading && (
+      {error && (
         <div className="error-container">
           <p>❌ {error}</p>
           <button onClick={() => fetchCompanyData(searchTerm)} className="retry-button">
             Try Again
           </button>
+        </div>
+      )}
+
+      {/* Company Overview Modal */}
+      {company && (
+        <CompanyOverviewModal
+          isOpen={currentView === 'company'}
+          onClose={handleCloseAll}
+          company={company}
+          jobs={jobs}
+          onViewJobs={handleViewJobs}
+        />
+      )}
+
+      {/* Jobs List Modal */}
+      {company && (
+        <JobsListModal
+          isOpen={currentView === 'jobs'}
+          onClose={handleCloseAll}
+          companyName={company.name}
+          jobs={jobs}
+          onSelectJob={handleSelectJob}
+          onBack={handleBackToCompany}
+        />
+      )}
+
+      {/* Job Details Modal */}
+      <JobDetailsModal
+        isOpen={currentView === 'jobDetails'}
+        onClose={handleCloseAll}
+        job={selectedJob}
+        onBack={handleBackToJobs}
+      />
+
+      {/* Welcome Message */}
+      {!company && !loading && (
+        <div className="welcome-container">
+          <h1>Welcome to Job Genie</h1>
+          <p>Search for companies to explore career opportunities</p>
         </div>
       )}
     </div>

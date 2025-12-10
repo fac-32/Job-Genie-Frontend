@@ -16,6 +16,8 @@ export interface Job {
   location: string;
   description: string;
   requirements: string[];
+  experienceLevel: string;
+  jobUrl: string;
   salary?: {
     min: number;
     max: number;
@@ -29,4 +31,9 @@ export interface CompanyOverviewResponse {
     company: Company;
     jobs: Job[];
   };
+}
+
+export interface JobDetailsResponse {
+  success: boolean;
+  data: Job;
 }
