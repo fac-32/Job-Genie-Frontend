@@ -3,10 +3,114 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://accounts.google.com/gsi/client" async defer></script>
+		<script type="module" src="./src/signIn.js"></script>
+		<link rel="stylesheet" href="./src/styles.css" />
 		<title>JobGenie</title>
 	</head>
 	<body>
 		<div id="root"></div>
 		<script type="module" src="/src/main.tsx"></script>
+		<nav id="navbar">
+			<div class="wrapper-container">
+				<div class="container">
+					<div class="web-items">
+						<div class="website-name">
+							<img src="./src/assets/Logo.png" alt="JobGenie Logo" class="logo" />
+							<h1>JobGenie</h1>
+						</div>
+						<nav class="nav-links">
+							<div class="nav-items">
+								<ul>
+									<li><a href="#wishlist">Wishlist</a></li>
+									<li><a href="#resume">Resume</a></li>
+								</ul>
+							</div>
+						</nav>
+					</div>
+					<div class="user-info">
+						<div id="g_id_onload" data-client_id="1053566652974-hubbhc366hubee59f4a8fdfek1lif8qb.apps.googleusercontent.com"
+							data-callback="handleCredentialResponse" data-use_fedcm_for_prompt="true"></div>
+						<div class="google_container">
+							<!-- <div class="g_id_signin" data-type="standard"></div> -->
+							<div class="userDetails"></div>
+						</div>
+						<div class="logout-btn">
+							<button class="g_id_signout">Logout</button>
+						</div>
+						<div class="signUp-btn">
+							<button class="signUpBtn">Sign Up</button>
+						</div>
+						<div class="login-btn">
+							<button class="loginBtn">Login</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<div id="signupModal" class="modal">
+			<div class="modal-content">
+				<span class="close" data-modal="signupModal">&times;</span>
+				<h2>Create Account</h2>
+				<form id="signupForm">
+					<div class="form-group">
+						<label for="signup-name">Full Name</label>
+						<input type="text" id="signup-name" name="name" required>
+					</div>
+					<div class="form-group">
+						<label for="signup-email">Email</label>
+						<input type="email" id="signup-email" name="email" required>
+					</div>
+					<div class="form-group">
+						<label for="signup-phone">Phone Number</label>
+						<input type="text" id="signup-phone" name="phone" required>
+					</div>
+					<div class="form-group">
+						<label for="signup-password">Password</label>
+						<input type="password" id="signup-password" name="password" required minlength="6">
+					</div>
+					<div class="error-message" id="signup-error"></div>
+					<div class="success-message" id="signup-success"></div>
+					<div class="form-actions">
+						<button type="submit">Sign Up</button>
+					</div>
+				</form>
+				<div class="divider">
+					<span>OR</span>
+				</div>
+				<div class="g_id_signin" data-type="standard" theme="outline" size="medium"></div>
+				<div class="switch-auth">
+					Already have an account? <a id="switchToLogin">Login</a>
+				</div>
+			</div>
+		</div>
+		<div id="loginModal" class="modal">
+			<div class="modal-content">
+				<span class="close" data-modal="loginModal">&times;</span>
+				<h2>Login</h2>
+				<form id="loginForm">
+					<div class="form-group">
+						<label for="login-email">Email</label>
+						<input type="email" id="login-email" name="email" required>
+					</div>
+					<div class="form-group">
+						<label for="login-password">Password</label>
+						<input type="password" id="login-password" name="password" required>
+					</div>
+					<div class="error-message" id="login-error"></div>
+					<div class="success-message" id="login-success"></div>
+					<div class="form-actions">
+						<button type="submit">Login</button>
+					</div>
+				</form>
+				<div class="divider">
+					<span>OR</span>
+				</div>
+				<div class="g_id_signin" data-type="standard" theme="outline" size="medium"></div>
+				<div class="switch-auth">
+					Don't have an account? <a id="switchToSignup">Sign Up</a>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
