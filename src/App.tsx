@@ -9,137 +9,140 @@ import './App.css';
 type ModalView = 'none' | 'company' | 'jobs' | 'jobDetails';
 
 function App() {
-  // State management
-  const [company, setCompany] = useState<Company | null>(null);
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentView, setCurrentView] = useState<ModalView>('none');
+	// State management
+	const [company, setCompany] = useState<Company | null>(null);
+	const [jobs, setJobs] = useState<Job[]>([]);
+	const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string>('');
+	const [searchTerm, setSearchTerm] = useState('');
+	const [currentView, setCurrentView] = useState<ModalView>('none');
 
-  // Fetch company data
-  const fetchCompanyData = async (companyName: string) => {
-    setLoading(true);
-    setError('');
-    
-    try {
-      const response = await getCompanyOverview(companyName);
-      
-      if (response.success) {
-        setCompany(response.data.company);
-        setJobs(response.data.jobs);
-        setCurrentView('company'); // Open company overview modal
-      } else {
-        setError('Failed to load company data');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
+	// Fetch company data
+	const fetchCompanyData = async (companyName: string) => {
+		setLoading(true);
+		setError('');
 
-  // Handle search
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      fetchCompanyData(searchTerm);
-    }
-  };
+		try {
+			const response = await getCompanyOverview(companyName);
 
-  // Modal navigation handlers
-  const handleViewJobs = () => {
-    setCurrentView('jobs');
-  };
+			if (response.success) {
+				setCompany(response.data.company);
+				setJobs(response.data.jobs);
+				setCurrentView('company'); // Open company overview modal
+			} else {
+				setError('Failed to load company data');
+			}
+		} catch (err) {
+			setError(err instanceof Error ? err.message : 'An error occurred');
+		} finally {
+			setLoading(false);
+		}
+	};
 
-  const handleSelectJob = (job: Job) => {
-    setSelectedJob(job);
-    setCurrentView('jobDetails');
-  };
+	// Handle search
+	const handleSearch = (e: React.FormEvent) => {
+		e.preventDefault();
+		if (searchTerm.trim()) {
+			fetchCompanyData(searchTerm);
+		}
+	};
 
-  const handleBackToJobs = () => {
-    setCurrentView('jobs');
-    setSelectedJob(null);
-  };
+	// Modal navigation handlers
+	const handleViewJobs = () => {
+		setCurrentView('jobs');
+	};
 
-  const handleBackToCompany = () => {
-    setCurrentView('company');
-  };
+	const handleSelectJob = (job: Job) => {
+		setSelectedJob(job);
+		setCurrentView('jobDetails');
+	};
 
-  const handleCloseAll = () => {
-    setCurrentView('none');
-    setSelectedJob(null);
-  };
+	const handleBackToJobs = () => {
+		setCurrentView('jobs');
+		setSelectedJob(null);
+	};
 
-  return (
-    <div className="app">
-      {/* Search Bar */}
-      <div className="search-container">
-        <form onSubmit={handleSearch} className="search-form">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search for a company (e.g., Google, Amazon, Meta)..."
-            className="search-input"
-          />
-          <button type="submit" className="search-button" disabled={loading}>
-            {loading ? 'Searching...' : 'Search'}
-          </button>
-        </form>
-      </div>
+	const handleBackToCompany = () => {
+		setCurrentView('company');
+	};
 
-      {/* Error State */}
-      {error && (
-        <div className="error-container">
-          <p>❌ {error}</p>
-          <button onClick={() => fetchCompanyData(searchTerm)} className="retry-button">
-            Try Again
-          </button>
-        </div>
-      )}
+	const handleCloseAll = () => {
+		setCurrentView('none');
+		setSelectedJob(null);
+	};
 
-      {/* Company Overview Modal */}
-      {company && (
-        <CompanyOverviewModal
-          isOpen={currentView === 'company'}
-          onClose={handleCloseAll}
-          company={company}
-          jobs={jobs}
-          onViewJobs={handleViewJobs}
-        />
-      )}
+	return (
+		<div className="app">
+			{/* Search Bar */}
+			<div className="search-container">
+				<form onSubmit={handleSearch} className="search-form">
+					<input
+						type="text"
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+						placeholder="Search for a company (e.g., Google, Amazon, Meta)..."
+						className="search-input"
+					/>
+					<button type="submit" className="search-button" disabled={loading}>
+						{loading ? 'Searching...' : 'Search'}
+					</button>
+				</form>
+			</div>
 
-      {/* Jobs List Modal */}
-      {company && (
-        <JobsListModal
-          isOpen={currentView === 'jobs'}
-          onClose={handleCloseAll}
-          companyName={company.name}
-          jobs={jobs}
-          onSelectJob={handleSelectJob}
-          onBack={handleBackToCompany}
-        />
-      )}
+			{/* Error State */}
+			{error && (
+				<div className="error-container">
+					<p>❌ {error}</p>
+					<button
+						onClick={() => fetchCompanyData(searchTerm)}
+						className="retry-button"
+					>
+						Try Again
+					</button>
+				</div>
+			)}
 
-      {/* Job Details Modal */}
-      <JobDetailsModal
-        isOpen={currentView === 'jobDetails'}
-        onClose={handleCloseAll}
-        job={selectedJob}
-        onBack={handleBackToJobs}
-      />
+			{/* Company Overview Modal */}
+			{company && (
+				<CompanyOverviewModal
+					isOpen={currentView === 'company'}
+					onClose={handleCloseAll}
+					company={company}
+					jobs={jobs}
+					onViewJobs={handleViewJobs}
+				/>
+			)}
 
-      {/* Welcome Message */}
-      {!company && !loading && (
-        <div className="welcome-container">
-          <h1>Welcome to Job Genie</h1>
-          <p>Search for companies to explore career opportunities</p>
-        </div>
-      )}
-    </div>
-  );
+			{/* Jobs List Modal */}
+			{company && (
+				<JobsListModal
+					isOpen={currentView === 'jobs'}
+					onClose={handleCloseAll}
+					companyName={company.name}
+					jobs={jobs}
+					onSelectJob={handleSelectJob}
+					onBack={handleBackToCompany}
+				/>
+			)}
+
+			{/* Job Details Modal */}
+			<JobDetailsModal
+				isOpen={currentView === 'jobDetails'}
+				onClose={handleCloseAll}
+				job={selectedJob}
+				onBack={handleBackToJobs}
+			/>
+
+			{/* Welcome Message */}
+			{!company && !loading && (
+				<div className="welcome-container">
+					<h1>Welcome to Job Genie</h1>
+					<p>Search for companies to explore career opportunities</p>
+				</div>
+			)}
+		</div>
+	);
 }
 
 export default App;

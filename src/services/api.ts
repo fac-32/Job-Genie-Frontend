@@ -1,5 +1,9 @@
 import axios from 'axios';
-import type { CompanyOverviewResponse, JobDetailsResponse, Job } from '../types/company.types';
+import type {
+	CompanyOverviewResponse,
+	JobDetailsResponse,
+	Job,
+} from '../types/company.types';
 
 // Backend API base URL
 const API_BASE_URL = 'http://localhost:3000/api';
@@ -10,21 +14,21 @@ const API_BASE_URL = 'http://localhost:3000/api';
  * @returns Company data with jobs
  */
 export async function getCompanyOverview(
-  companyName: string
+	companyName: string
 ): Promise<CompanyOverviewResponse> {
-  try {
-    const response = await axios.get<CompanyOverviewResponse>(
-      `${API_BASE_URL}/companies/${companyName}/overview`
-    );
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(
-        `Failed to fetch company overview: ${error.response?.data?.error || error.message}`
-      );
-    }
-    throw error;
-  }
+	try {
+		const response = await axios.get<CompanyOverviewResponse>(
+			`${API_BASE_URL}/companies/${companyName}/overview`
+		);
+		return response.data;
+	} catch (error) {
+		if (axios.isAxiosError(error)) {
+			throw new Error(
+				`Failed to fetch company overview: ${error.response?.data?.error || error.message}`
+			);
+		}
+		throw error;
+	}
 }
 
 /**
@@ -33,19 +37,19 @@ export async function getCompanyOverview(
  * @returns Array of jobs
  */
 export async function getCompanyJobs(companyName: string): Promise<Job[]> {
-  try {
-    const response = await axios.get(
-      `${API_BASE_URL}/companies/${companyName}/jobs`
-    );
-    return response.data.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(
-        `Failed to fetch jobs: ${error.response?.data?.error || error.message}`
-      );
-    }
-    throw error;
-  }
+	try {
+		const response = await axios.get(
+			`${API_BASE_URL}/companies/${companyName}/jobs`
+		);
+		return response.data.data;
+	} catch (error) {
+		if (axios.isAxiosError(error)) {
+			throw new Error(
+				`Failed to fetch jobs: ${error.response?.data?.error || error.message}`
+			);
+		}
+		throw error;
+	}
 }
 
 /**
@@ -55,20 +59,20 @@ export async function getCompanyJobs(companyName: string): Promise<Job[]> {
  * @returns Job details
  */
 export async function getJobDetails(
-  companyName: string,
-  jobId: string
+	companyName: string,
+	jobId: string
 ): Promise<JobDetailsResponse> {
-  try {
-    const response = await axios.get<JobDetailsResponse>(
-      `${API_BASE_URL}/companies/${companyName}/jobs/${jobId}`
-    );
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(
-        `Failed to fetch job details: ${error.response?.data?.error || error.message}`
-      );
-    }
-    throw error;
-  }
+	try {
+		const response = await axios.get<JobDetailsResponse>(
+			`${API_BASE_URL}/companies/${companyName}/jobs/${jobId}`
+		);
+		return response.data;
+	} catch (error) {
+		if (axios.isAxiosError(error)) {
+			throw new Error(
+				`Failed to fetch job details: ${error.response?.data?.error || error.message}`
+			);
+		}
+		throw error;
+	}
 }
