@@ -1,0 +1,149 @@
+.company-overview-modal {
+	padding: 1rem 0;
+}
+
+.company-logo-container {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 2rem;
+	padding: 1rem;
+	background: #f9fafb;
+	border-radius: 12px;
+}
+
+.company-logo {
+	max-width: 120px;
+	max-height: 80px;
+	object-fit: contain;
+}
+
+.company-logo-placeholder {
+	width: 80px;
+	height: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: white;
+	font-size: 2.5rem;
+	font-weight: 700;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.company-info {
+	display: grid;
+	gap: 1.5rem;
+	margin-bottom: 2rem;
+}
+
+.company-description {
+	font-size: 1rem;
+	line-height: 1.6;
+	color: #4b5563;
+	margin-bottom: 1.5rem;
+}
+
+.company-details-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 1.5rem;
+}
+
+.detail-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.75rem;
+}
+
+.detail-icon {
+	font-size: 1.5rem;
+	margin-top: 0.25rem;
+}
+
+.detail-content h4 {
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: #6b7280;
+	margin: 0 0 0.25rem 0;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.detail-content p {
+	font-size: 1rem;
+	font-weight: 500;
+	color: #1f2937;
+	margin: 0;
+}
+
+.contact-info {
+	margin-top: 1.5rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid #e5e7eb;
+}
+
+.contact-info h4 {
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: #6b7280;
+	margin: 0 0 0.5rem 0;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.contact-info a {
+	color: #6366f1;
+	text-decoration: none;
+	font-weight: 500;
+	transition: color 0.2s;
+	word-break: break-all;
+}
+
+.contact-info a:hover {
+	color: #4f46e5;
+	text-decoration: underline;
+}
+
+.jobs-section {
+	margin-top: 2rem;
+	padding-top: 2rem;
+	border-top: 2px solid #e5e7eb;
+}
+
+.jobs-section h3 {
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: #1f2937;
+	margin: 0 0 1rem 0;
+}
+
+.jobs-count {
+	font-size: 0.875rem;
+	color: #6b7280;
+	margin-left: 0.5rem;
+}
+
+.view-jobs-button {
+	width: 100%;
+	background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+	color: white;
+	border: none;
+	padding: 1rem 2rem;
+	font-size: 1rem;
+	font-weight: 600;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.3s;
+	box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
+	margin-top: 1rem;
+}
+
+.view-jobs-button:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+}
+
+.view-jobs-button:active {
+	transform: translateY(0);
+}

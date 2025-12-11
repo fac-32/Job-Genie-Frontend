@@ -1,0 +1,80 @@
+.company-profile {
+	min-height: 100vh;
+	background: #f5f7fa;
+}
+
+.profile-content {
+	max-width: 1400px;
+	margin: 0 auto;
+	padding: 0 2rem 3rem 2rem;
+}
+
+/* Overview Section */
+.overview-section {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 1.5rem;
+	margin-bottom: 3rem;
+}
+
+.overview-main {
+	min-height: 400px;
+}
+
+.overview-sidebar {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+/* Categories Section */
+.categories-section {
+	margin-top: 2rem;
+}
+
+.section-title {
+	font-size: 1.8rem;
+	font-weight: 700;
+	color: #1a1a1a;
+	margin: 0 0 1.5rem 0;
+}
+
+.categories-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+	.overview-section {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.categories-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 768px) {
+	.profile-content {
+		padding: 0 1rem 2rem 1rem;
+	}
+
+	.overview-section {
+		grid-template-columns: 1fr;
+	}
+
+	.overview-main {
+		min-height: auto;
+	}
+
+	.categories-grid {
+		grid-template-columns: 1fr;
+		gap: 1rem;
+	}
+
+	.section-title {
+		font-size: 1.5rem;
+	}
+}
