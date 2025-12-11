@@ -67,8 +67,7 @@ function updateUIForLoggedInUser(userData: any): void {
 	const loginBtn = document.querySelector<HTMLElement>('.loginBtn');
 
 	if (userContainer && signInBtn && signOutBtn && signUpBtn && loginBtn) {
-		const name: string =
-			userData.given_name || userData.name || userData.email.split('@')[0];
+		const name: string = userData.given_name || 'User';
 		userContainer.textContent = `Hello, ${name}`;
 		console.log(`username = ${name}`);
 		console.log(`email = ${userData.email}`);
