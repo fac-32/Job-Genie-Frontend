@@ -7,15 +7,25 @@ window.addEventListener('load', function () {
 	const signUpBtn = document.querySelector<HTMLElement>('.signUpBtn');
 	const loginBtn = document.querySelector<HTMLElement>('.loginBtn');
 
-	console.log('this is working');
-	console.log(window.location.origin);
+	initializeModals();
+	initializeEmailAuth();
 
 	if (signOutBtn && userContainer && signInBtn && signUpBtn && loginBtn) {
 		signOutBtn.style.display = 'none';
 		userContainer.style.display = 'none';
 
-		signOutBtn.addEventListener('click', () => {
+		signOutBtn.addEventListener('click', async () => {
 			console.log('signout button was clicked');
+
+			try {
+				await fetch(`http://localhost:3000/auth/logout`, {
+					method: 'POST',
+					credentials: 'include',
+				});
+			} catch (error) {
+				console.error('Logout error:', error);
+			}
+
 			userContainer.textContent = '';
 			signOutBtn.style.display = 'none';
 			userContainer.style.display = 'none';
@@ -24,18 +34,6 @@ window.addEventListener('load', function () {
 			signInBtn.style.display = 'block';
 			google.accounts.id.disableAutoSelect();
 			console.log('User signed out');
-		});
-
-		google.accounts.id.initialize({
-			client_id:
-				'1053566652974-hubbhc366hubee59f4a8fdfek1lif8qb.apps.googleusercontent.com',
-			callback: handleCredentialResponse,
-			use_fedcm_for_prompt: false,
-		});
-
-		google.accounts.id.renderButton(signInBtn, {
-			theme: 'outline',
-			size: 'small',
 		});
 	}
 });
@@ -58,6 +56,10 @@ async function handleCredentialResponse(response: {
 		return;
 	}
 
+	updateUIForLoggedInUser(responsePayload);
+}
+
+function updateUIForLoggedInUser(userData: any): void {
 	const userContainer = document.querySelector<HTMLElement>('.userDetails');
 	const signInBtn = document.querySelector<HTMLElement>('.g_id_signin');
 	const signOutBtn = document.querySelector<HTMLElement>('.g_id_signout');
@@ -65,44 +67,189 @@ async function handleCredentialResponse(response: {
 	const loginBtn = document.querySelector<HTMLElement>('.loginBtn');
 
 	if (userContainer && signInBtn && signOutBtn && signUpBtn && loginBtn) {
-		const name: string = responsePayload.given_name || 'User';
+		const name: string =
+			userData.given_name || userData.name || userData.email.split('@')[0];
 		userContainer.textContent = `Hello, ${name}`;
 		console.log(`username = ${name}`);
-		console.log(`email = ${responsePayload.email}`);
-
-		localStorage.setItem('userEmail', responsePayload.email);
+		console.log(`email = ${userData.email}`);
 
 		userContainer.style.display = 'block';
-		signInBtn.style.display = 'none';
+		signOutBtn.style.display = 'block';
+
 		signUpBtn.style.display = 'none';
 		loginBtn.style.display = 'none';
-		signOutBtn.style.display = 'block';
+
+		// Close any open modals
+		const modals = document.querySelectorAll<HTMLElement>('.modal');
+		modals.forEach((modal) => (modal.style.display = 'none'));
 	}
 }
 
+function initializeModals(): void {
+	const signupModal = document.getElementById('signupModal') as HTMLElement;
+	const loginModal = document.getElementById('loginModal') as HTMLElement;
+	const signUpBtn = document.querySelector<HTMLElement>('.signUpBtn');
+	const loginBtn = document.querySelector<HTMLElement>('.loginBtn');
+	const closeBtns = document.querySelectorAll<HTMLElement>('.close');
+	const switchToLogin = document.getElementById('switchToLogin') as HTMLElement;
+	const switchToSignup = document.getElementById(
+		'switchToSignup'
+	) as HTMLElement;
+
+	// Open modals
+	signUpBtn?.addEventListener('click', () => {
+		if (signupModal) signupModal.style.display = 'block';
+	});
+
+	loginBtn?.addEventListener('click', () => {
+		if (loginModal) loginModal.style.display = 'block';
+	});
+
+	// Close modals
+	closeBtns.forEach((btn) => {
+		btn.addEventListener('click', (e) => {
+			const target = e.target as HTMLElement;
+			const modalId = target.getAttribute('data-modal');
+			const modal = document.getElementById(modalId || '');
+			if (modal) modal.style.display = 'none';
+		});
+	});
+
+	switchToLogin?.addEventListener('click', () => {
+		if (signupModal) signupModal.style.display = 'none';
+		if (loginModal) loginModal.style.display = 'block';
+	});
+
+	switchToSignup?.addEventListener('click', () => {
+		if (loginModal) loginModal.style.display = 'none';
+		if (signupModal) signupModal.style.display = 'block';
+	});
+
+	window.addEventListener('click', (e) => {
+		if (e.target === signupModal) {
+			signupModal.style.display = 'none';
+		}
+		if (e.target === loginModal) {
+			loginModal.style.display = 'none';
+		}
+	});
+}
+
+function initializeEmailAuth(): void {
+	const signupForm = document.getElementById('signupForm') as HTMLFormElement;
+	const loginForm = document.getElementById('loginForm') as HTMLFormElement;
+
+	// Sign Up Form Handler
+	signupForm?.addEventListener('submit', async (e) => {
+		e.preventDefault();
+
+		const errorEl = document.getElementById('signup-error');
+		const successEl = document.getElementById('signup-success');
+		if (errorEl) errorEl.style.display = 'none';
+		if (successEl) successEl.style.display = 'none';
+
+		const formData = {
+			name: (document.getElementById('signup-name') as HTMLInputElement).value,
+			email: (document.getElementById('signup-email') as HTMLInputElement)
+				.value,
+			password: (document.getElementById('signup-password') as HTMLInputElement)
+				.value,
+			phoneNumber: (document.getElementById('signup-phone') as HTMLInputElement)
+				.value,
+		};
+		try {
+			const response = await fetch(`http://localhost:3000/auth/signup`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData),
+				credentials: 'include',
+			});
+			const data = await response.json();
+			if (response.ok) {
+				if (successEl) {
+					successEl.textContent =
+						'Account created successfully! Please check your email to verify.';
+					successEl.style.display = 'block';
+				}
+				signupForm.reset();
+				setTimeout(() => {
+					const signupModal = document.getElementById('signupModal');
+					const loginModal = document.getElementById('loginModal');
+					if (signupModal) signupModal.style.display = 'none';
+					if (loginModal) loginModal.style.display = 'block';
+				}, 2000);
+			} else {
+				if (errorEl) {
+					errorEl.textContent =
+						data.error || 'Sign up failed. Please try again.';
+					errorEl.style.display = 'block';
+				}
+			}
+		} catch (error) {
+			if (errorEl) {
+				errorEl.textContent = 'Network error. Please try again.';
+				errorEl.style.display = 'block';
+			}
+			console.error('Signup error:', error);
+		}
+	});
+
+	loginForm?.addEventListener('submit', async (e) => {
+		e.preventDefault();
+
+		const errorEl = document.getElementById('login-error');
+		const successEl = document.getElementById('login-success');
+		if (errorEl) errorEl.style.display = 'none';
+		if (successEl) successEl.style.display = 'none';
+
+		const formData = {
+			email: (document.getElementById('login-email') as HTMLInputElement).value,
+			password: (document.getElementById('login-password') as HTMLInputElement)
+				.value,
+		};
+
+		try {
+			const response = await fetch(`http://localhost:3000/auth/login`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData),
+				credentials: 'include',
+			});
+
+			const data = await response.json();
+
+			if (response.ok) {
+				if (successEl) {
+					successEl.textContent = 'Login successful!';
+					successEl.style.display = 'block';
+				}
+
+				// Update UI to show logged in state
+				updateUIForLoggedInUser(data);
+
+				setTimeout(() => {
+					const loginModal = document.getElementById('loginModal');
+					if (loginModal) loginModal.style.display = 'none';
+				}, 1000);
+			} else {
+				if (errorEl) {
+					errorEl.textContent =
+						data.error || 'Login failed. Please check your credentials.';
+					errorEl.style.display = 'block';
+				}
+			}
+		} catch (error) {
+			if (errorEl) {
+				errorEl.textContent = 'Network error. Please try again.';
+				errorEl.style.display = 'block';
+			}
+			console.error('Login error:', error);
+		}
+	});
+}
+
 (window as any).handleCredentialResponse = handleCredentialResponse;
-
-// interface JwtPayload {
-// 	given_name: string;
-// 	email: string;
-// 	[key: string]: any;
-// }
-
-// function decodeJwtResponse(token: string): JwtPayload {
-// 	let base64Url = token.split('.')[1];
-// 	if (!base64Url) {
-// 		throw new Error('Invalid token');
-// 	} else {
-// 		let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-// 		let jsonPayload = decodeURIComponent(
-// 			atob(base64)
-// 				.split('')
-// 				.map(function (c) {
-// 					return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-// 				})
-// 				.join('')
-// 		);
-
-// 		return JSON.parse(jsonPayload);
-// 	}
-// }
