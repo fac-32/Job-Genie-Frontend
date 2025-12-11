@@ -48,9 +48,15 @@ async function handleCredentialResponse(response: {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ token: g_token }),
+		credentials: 'include',
 	});
 
-	const responsePayload = decodeJwtResponse(g_token);
+	const responsePayload = await validity.json();
+
+	if (!responsePayload.ok) {
+		console.error(responsePayload.error);
+		return;
+	}
 
 	const userContainer = document.querySelector<HTMLElement>('.userDetails');
 	const signInBtn = document.querySelector<HTMLElement>('.g_id_signin');
@@ -76,27 +82,27 @@ async function handleCredentialResponse(response: {
 
 (window as any).handleCredentialResponse = handleCredentialResponse;
 
-interface JwtPayload {
-	given_name: string;
-	email: string;
-	[key: string]: any;
-}
+// interface JwtPayload {
+// 	given_name: string;
+// 	email: string;
+// 	[key: string]: any;
+// }
 
-function decodeJwtResponse(token: string): JwtPayload {
-	let base64Url = token.split('.')[1];
-	if (!base64Url) {
-		throw new Error('Invalid token');
-	} else {
-		let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-		let jsonPayload = decodeURIComponent(
-			atob(base64)
-				.split('')
-				.map(function (c) {
-					return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-				})
-				.join('')
-		);
+// function decodeJwtResponse(token: string): JwtPayload {
+// 	let base64Url = token.split('.')[1];
+// 	if (!base64Url) {
+// 		throw new Error('Invalid token');
+// 	} else {
+// 		let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+// 		let jsonPayload = decodeURIComponent(
+// 			atob(base64)
+// 				.split('')
+// 				.map(function (c) {
+// 					return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+// 				})
+// 				.join('')
+// 		);
 
-		return JSON.parse(jsonPayload);
-	}
-}
+// 		return JSON.parse(jsonPayload);
+// 	}
+// }
