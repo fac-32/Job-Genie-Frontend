@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Navbar from './components/Navbar';
 import CompanyOverviewModal from './components/CompanyOverviewModal';
 import JobsListModal from './components/JobsListModal';
 import JobDetailsModal from './components/JobDetailsModal';
 import { getCompanyOverview } from './services/api';
 import type { Company, Job } from './types/company.types';
+import { useAuth } from './context/AuthContext';
 import './App.css';
 
 type ModalView = 'none' | 'company' | 'jobs' | 'jobDetails';
@@ -17,6 +19,12 @@ function App() {
 	const [error, setError] = useState<string>('');
 	const [searchTerm, setSearchTerm] = useState('');
 	const [currentView, setCurrentView] = useState<ModalView>('none');
+
+	const { checkAuth } = useAuth();
+
+	useEffect(() => {
+		checkAuth();
+	}, [checkAuth]);
 
 	// Fetch company data
 	const fetchCompanyData = async (companyName: string) => {
@@ -74,6 +82,7 @@ function App() {
 
 	return (
 		<div className="app">
+			<Navbar />
 			{/* Search Bar */}
 			<div className="search-container">
 				<form onSubmit={handleSearch} className="search-form">
