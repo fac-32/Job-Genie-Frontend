@@ -101,8 +101,6 @@ function App() {
 				</form>
 			</div>
 
-			<WishlistGenerator />
-
 			{/* Error State */}
 			{error && (
 				<div className="error-container">
@@ -154,6 +152,8 @@ function App() {
 					<p>Search for companies to explore career opportunities</p>
 				</div>
 			)}
+
+				<WishlistGenerator />
 		</div>
 	);
 }
