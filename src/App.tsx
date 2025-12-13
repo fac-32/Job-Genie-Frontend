@@ -6,6 +6,8 @@ import JobDetailsModal from './components/JobDetailsModal';
 import { getCompanyOverview } from './services/api';
 import type { Company, Job } from './types/company.types';
 import { useAuth } from './context/AuthContext';
+import WishlistGenerator from './components/WishlistGenerator';
+
 import './App.css';
 
 type ModalView = 'none' | 'company' | 'jobs' | 'jobDetails';
@@ -150,6 +152,8 @@ function App() {
 					<p>Search for companies to explore career opportunities</p>
 				</div>
 			)}
+
+				<WishlistGenerator />
 		</div>
 	);
 }
