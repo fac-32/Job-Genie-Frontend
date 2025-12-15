@@ -1,4 +1,5 @@
 import { useState, FormEvent } from 'react';
+import WishlistCard from './WishlistCard';
 import './WishlistGenerator.css';
 
 interface WishlistFilters {
@@ -13,7 +14,7 @@ interface Company {
 	name: string;
 	industry: string;
 	size: string;
-	city: string[] | string; // Backend might return string or array
+	city: string[] | string;
 	country: string;
 	description: string;
 	logoUrl: string;
@@ -36,6 +37,7 @@ const WishlistGenerator = () => {
 	const [loading, setLoading] = useState(false);
 	const [success, setSuccess] = useState(false);
 	const [error, setError] = useState(false);
+	const [wishlistCompanies, setWishlistCompanies] = useState<Company[]>([]);
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -71,25 +73,8 @@ const WishlistGenerator = () => {
 				console.log(`📊 Total companies: ${data.total}`);
 				console.log('🏢 Companies:', data.companies);
 
-				// Log each company nicely
-				data.companies.forEach((company, index) => {
-					// Handle city as either string or array
-					const cityDisplay = Array.isArray(company.city) 
-						? company.city.join(', ') 
-						: company.city;
-					
-					console.log(`
-Company ${index + 1}:
-  Name: ${company.name}
-  Industry: ${company.industry}
-  Size: ${company.size}
-  Location: ${cityDisplay}, ${company.country}
-  Description: ${company.description}
-  Website: ${company.websiteUrl}
-  Logo: ${company.logoUrl}
-					`);
-				});
-
+				// Update state with companies
+				setWishlistCompanies(data.companies);
 				setSuccess(true);
 				setTimeout(() => setSuccess(false), 5000);
 			} else {
@@ -104,6 +89,13 @@ Company ${index + 1}:
 		} finally {
 			setLoading(false);
 		}
+	};
+
+	const handleDeleteCompany = (companyId: string) => {
+		console.log('🗑️ Removing company from wishlist:', companyId);
+		setWishlistCompanies((prev) =>
+			prev.filter((company) => company.id !== companyId)
+		);
 	};
 
 	return (
@@ -217,7 +209,10 @@ Company ${index + 1}:
 				{/* Success message */}
 				{success && (
 					<div className="success-box">
-						<p>✅ Successfully generated wishlist! Check your console for details.</p>
+						<p>
+							✅ Successfully generated wishlist with {wishlistCompanies.length}{' '}
+							{wishlistCompanies.length === 1 ? 'company' : 'companies'}!
+						</p>
 					</div>
 				)}
 
@@ -225,6 +220,28 @@ Company ${index + 1}:
 				{error && (
 					<div className="error-box">
 						<p>❌ Failed to generate wishlist. Please try again.</p>
+					</div>
+				)}
+
+				{/* Wishlist Cards Display */}
+				{wishlistCompanies.length > 0 && (
+					<div className="wishlist-results">
+						<div className="results-header">
+							<h3>Your Personalized Wishlist</h3>
+							<p className="results-count">
+								{wishlistCompanies.length}{' '}
+								{wishlistCompanies.length === 1 ? 'company' : 'companies'} found
+							</p>
+						</div>
+						<div className="wishlist-cards-container">
+							{wishlistCompanies.map((company) => (
+								<WishlistCard
+									key={company.id}
+									company={company}
+									onDelete={handleDeleteCompany}
+								/>
+							))}
+						</div>
 					</div>
 				)}
 			</div>
