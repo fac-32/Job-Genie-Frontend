@@ -90,6 +90,24 @@ Company ${index + 1}:
 					`);
 				});
 
+				const jobsRes = await fetch(`http://localhost:3000/jobs`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						companies: data.companies,
+						roleKeywords: roleKeywordsArray,
+					}),
+				});
+				const jobsData = await jobsRes.json();
+				console.log('🏆 Recommended Jobs:', jobsData.jobs);
+
+				// Display recommended jobs to the user
+				if (jobsData.jobs && jobsData.jobs.length > 0) {
+					alert('Here are some recommended jobs for you:\n' + jobsData.jobs.map((job: any) => `- ${job.title} at ${job.company}`).join('\n'));
+				} else {
+					alert('No recommended jobs found.');
+				}
+
 				setSuccess(true);
 				setTimeout(() => setSuccess(false), 5000);
 			} else {

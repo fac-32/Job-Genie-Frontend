@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import SignUpModal from './SignupModal';
-import LoginModal from './LogInModal';
+import SignUpModal from './SignUpModal';
+import LoginModal from './LoginModal';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Navbar.css';
 
