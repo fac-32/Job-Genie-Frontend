@@ -238,6 +238,7 @@ const WishlistGenerator = () => {
 								<option value="Liverpool">Liverpool</option>
 								<option value="Cambridge">Cambridge</option>
 								<option value="Oxford">Oxford</option>
+								<option value="dublin">dublin</option>
 							</select>
 						</div>
 
