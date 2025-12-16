@@ -186,7 +186,7 @@ const WishlistGenerator = () => {
 								<option value="Cybersecurity">Cybersecurity</option>
 								<option value="Cloud Computing">Cloud Computing</option>
 								<option value="Biotechnology">Biotechnology</option>
-								<option value="EdTech">EdTech</option>
+								<option value="Education Technology">Education Technology</option>
 								<option value="HealthTech">HealthTech</option>
 								<option value="IT">IT</option>
 								<option value="Artificial Intelligence">Artificial Intelligence</option>
@@ -238,7 +238,7 @@ const WishlistGenerator = () => {
 								<option value="Liverpool">Liverpool</option>
 								<option value="Cambridge">Cambridge</option>
 								<option value="Oxford">Oxford</option>
-								<option value="dublin">dublin</option>
+								<option value="Dublin">Dublin</option>
 							</select>
 						</div>
 
