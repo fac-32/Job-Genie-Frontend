@@ -45,6 +45,8 @@ interface JobsByWishlistResponse {
   }[];
 };
 
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
+
 const WishlistGenerator = () => {
 	const [filters, setFilters] = useState<WishlistFilters>({
 		industry: '',
@@ -77,7 +79,7 @@ const WishlistGenerator = () => {
 
 		try {
 			const queryParams = new URLSearchParams(cleanFilters).toString();
-			const url = `http://localhost:3000/api/wishlist/generate?${queryParams}`;
+			const url = `${API_BASE_URL}/api/wishlist/generate?${queryParams}`;
 
 			console.log('📡 Making request to:', url);
 
@@ -98,7 +100,7 @@ const WishlistGenerator = () => {
 				// Update state with companies
 				setWishlistCompanies(data.companies);
 				const roleKeywordsArray = roleKeywords.split(',').map((kw) => kw.trim()).filter(Boolean);
-				const jobsRes = await fetch(`http://localhost:3000/jobs`, {
+				const jobsRes = await fetch(`${API_BASE_URL}/jobs`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
