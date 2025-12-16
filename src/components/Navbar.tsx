@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import SignUpModal from './SignupModal';
-import LoginModal from './LogInModal';
+import SignUpModal from './SignUpModal';
+import LoginModal from './LoginModal';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Navbar.css';
 
@@ -56,12 +56,12 @@ const Navbar = () => {
 								<img src="/src/assets/Logo.png" alt="JobGenie Logo" className="logo" />
 								<h1>JobGenie</h1>
 							</div>
-							<nav className="nav-links">
+							{/* <nav className="nav-links">
 								<ul>
 									<li><a href="#wishlist">Wishlist</a></li>
 									<li><a href="#resume">Resume</a></li>
 								</ul>
-							</nav>
+							</nav> */}
 						</div>
 						<div className="user-info">
 							{isAuthenticated ? (
