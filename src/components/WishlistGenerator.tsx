@@ -188,6 +188,16 @@ const WishlistGenerator = () => {
 								<option value="Biotechnology">Biotechnology</option>
 								<option value="EdTech">EdTech</option>
 								<option value="HealthTech">HealthTech</option>
+								<option value="IT">IT</option>
+								<option value="Artificial Intelligence">Artificial Intelligence</option>
+								<option value="Blockchain">Blockchain</option>
+								<option value="Internet of Things">Internet of Things (IoT)</option>
+								<option value="Robotics">Robotics</option>
+								<option value="AR/VR">AR/VR</option>
+								<option value="Quantum Computing">Quantum Computing</option>
+								<option value="GreenTech">GreenTech</option>
+								<option value="Autonomous Vehicles">Autonomous Vehicles</option>
+								<option value="3D Printing">3D Printing</option>
 							</select>
 						</div>
 
