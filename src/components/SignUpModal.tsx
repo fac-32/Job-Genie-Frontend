@@ -15,7 +15,7 @@ const SignUpModal = ({ isOpen, onClose, onSwitchToLogin }: SignUpModalProps) => 
 		name: '',
 		email: '',
 		password: '',
-        phone: 0,
+        phone: '',
 	});
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
@@ -52,9 +52,14 @@ const SignUpModal = ({ isOpen, onClose, onSwitchToLogin }: SignUpModalProps) => 
 		setLoading(true);
 
 		try {
-			await signup(formData);
+			await signup({
+                name: formData.name,
+                email: formData.email,
+                password: formData.password,
+                phone: Number(formData.phone),
+            });
 			setSuccess('Account created successfully! Please check your email to verify.');
-			setFormData({ name: '', email: '', password: '', phone: 0 });
+			setFormData({ name: '', email: '', password: '', phone: '' });
 
 			// Switch to login after 2 seconds
 			setTimeout(() => {
@@ -68,7 +73,7 @@ const SignUpModal = ({ isOpen, onClose, onSwitchToLogin }: SignUpModalProps) => 
 	};
 
 	const handleClose = () => {
-		setFormData({ name: '', email: '', password: '', phone: 0 });
+		setFormData({ name: '', email: '', password: '', phone: '' });
 		setError('');
 		setSuccess('');
 		onClose();
