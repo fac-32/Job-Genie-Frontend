@@ -37,7 +37,9 @@
 		"isolatedModules": true,
 		"noUncheckedSideEffectImports": true,
 		"moduleDetection": "force",
-		"skipLibCheck": true
+		"skipLibCheck": true,
+
+		"types": ["vite/client"]
 	},
 	"include": ["src"],
 	"exclude": ["node_modules", "dist"]

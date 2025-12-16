@@ -18,6 +18,7 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext(undefined as AuthContextType | undefined);
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState(null as AuthContextType['user']);
@@ -29,14 +30,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         try {
             let response;
             if (credentials.provider === 'google' && credentials.token) {
-                response = await fetch('http://localhost:3000/auth/google', {
+                response = await fetch(`${API_BASE_URL}/auth/google`, {
                     method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ token: credentials.token }),
 					credentials: 'include',
 				});
 			} else {
-                response = await fetch('http://localhost:3000/auth/login', {
+                response = await fetch(`${API_BASE_URL}/auth/login`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
@@ -71,7 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const signup = useCallback(async (data: {name: string; email: string; password: string; phone: number}) => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:3000/auth/signup', {
+            const response = await fetch(`${API_BASE_URL}/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -94,7 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const logout = useCallback(async () => {
         setLoading(true);
 		try {
-			await fetch('http://localhost:3000/auth/logout', {
+			await fetch(`${API_BASE_URL}/auth/logout`, {
 				method: 'POST',
 				credentials: 'include',
 			});
@@ -114,7 +115,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const checkAuth = useCallback(async () => {
         setLoading(true);
         try {
-			const response = await fetch('http://localhost:3000/auth/me', {
+			const response = await fetch(`${API_BASE_URL}/auth/me`, {
 				credentials: 'include',
 			});
             const data = await response.json();
