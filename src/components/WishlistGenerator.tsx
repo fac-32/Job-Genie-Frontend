@@ -186,8 +186,18 @@ const WishlistGenerator = () => {
 								<option value="Cybersecurity">Cybersecurity</option>
 								<option value="Cloud Computing">Cloud Computing</option>
 								<option value="Biotechnology">Biotechnology</option>
-								<option value="EdTech">EdTech</option>
+								<option value="Education Technology">Education Technology</option>
 								<option value="HealthTech">HealthTech</option>
+								<option value="IT">IT</option>
+								<option value="Artificial Intelligence">Artificial Intelligence</option>
+								<option value="Blockchain">Blockchain</option>
+								<option value="Internet of Things">Internet of Things (IoT)</option>
+								<option value="Robotics">Robotics</option>
+								<option value="AR/VR">AR/VR</option>
+								<option value="Quantum Computing">Quantum Computing</option>
+								<option value="GreenTech">GreenTech</option>
+								<option value="Autonomous Vehicles">Autonomous Vehicles</option>
+								<option value="3D Printing">3D Printing</option>
 							</select>
 						</div>
 
@@ -228,6 +238,7 @@ const WishlistGenerator = () => {
 								<option value="Liverpool">Liverpool</option>
 								<option value="Cambridge">Cambridge</option>
 								<option value="Oxford">Oxford</option>
+								<option value="Dublin">Dublin</option>
 							</select>
 						</div>
 
