@@ -252,6 +252,79 @@
 	box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
 }
 
+/* Jobs modal overlay */
+.jobs-modal-overlay {
+	position: fixed;
+	inset: 0;
+	/* top:0 right:0 bottom:0 left:0 */
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 3000;
+	/* higher than delete dialog (2000) */
+}
+
+/* Jobs modal container */
+.jobs-modal {
+	background: #ffffff;
+	border-radius: 12px;
+	padding: 1.75rem 2rem;
+	max-width: 640px;
+	width: 90%;
+	max-height: 80vh;
+	overflow-y: auto;
+	box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+/* Close button */
+.jobs-modal-close {
+	border: none;
+	background: transparent;
+	font-size: 1.25rem;
+	cursor: pointer;
+	float: right;
+}
+
+/* Title */
+.jobs-modal h3 {
+	margin-top: 0;
+	margin-bottom: 1rem;
+	font-size: 1.4rem;
+	font-weight: 700;
+	color: #1a1a1a;
+}
+
+/* Jobs list */
+.jobs-modal-list {
+	list-style: none;
+	padding: 0;
+	margin: 0.5rem 0 0;
+}
+
+.jobs-modal-item {
+	padding: 0.5rem 0.25rem;
+	border-bottom: 1px solid #e5e7eb;
+	font-size: 0.95rem;
+	line-height: 1.5;
+}
+
+.jobs-modal-item:last-child {
+	border-bottom: none;
+}
+
+/* Job link */
+.jobs-modal-item a {
+	color: #007bff;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.jobs-modal-item a:hover {
+	color: #0056b3;
+	text-decoration: underline;
+}
+
 /* Animations */
 @keyframes fadeIn {
 	from {

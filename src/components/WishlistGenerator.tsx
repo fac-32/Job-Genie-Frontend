@@ -27,6 +27,24 @@ interface WishlistResponse {
 	companies: Company[];
 }
 
+interface TheirStackJob {
+  id: number | string;
+  job_title: string;
+  company_name: string;
+  location?: string;
+  url: string;
+  date_posted?: string;
+  job_seniority?: string;
+}
+
+interface JobsByWishlistResponse {
+  success: boolean;
+  results: {
+    company: string;
+    jobs: TheirStackJob[];
+  }[];
+};
+
 const WishlistGenerator = () => {
 	const [filters, setFilters] = useState<WishlistFilters>({
 		industry: '',
@@ -38,6 +56,10 @@ const WishlistGenerator = () => {
 	const [success, setSuccess] = useState(false);
 	const [error, setError] = useState(false);
 	const [wishlistCompanies, setWishlistCompanies] = useState<Company[]>([]);
+	const [jobsByCompany, setJobsByCompany] = useState<{ company: string; jobs: TheirStackJob[] }[]>([]);
+	const [roleKeywords, setRoleKeywords] = useState('software engineer, developer');
+	const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
+	const [isJobsModalOpen, setIsJobsModalOpen] = useState(false);
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -75,25 +97,28 @@ const WishlistGenerator = () => {
 
 				// Update state with companies
 				setWishlistCompanies(data.companies);
+				const roleKeywordsArray = roleKeywords.split(',').map((kw) => kw.trim()).filter(Boolean);
 				const jobsRes = await fetch(`http://localhost:3000/jobs`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
+						postedAt: 7,
 						companies: data.companies,
-						roleKeywords: roleKeywordsArray,
+						jobTitles: roleKeywordsArray,
+						remote: null,
 					}),
 				});
-				const jobsData = await jobsRes.json();
-				console.log('🏆 Recommended Jobs:', jobsData.jobs);
+				const jobsData: JobsByWishlistResponse = await jobsRes.json();
 
-				// Display recommended jobs to the user
-				if (jobsData.jobs && jobsData.jobs.length > 0) {
-					alert('Here are some recommended jobs for you:\n' + jobsData.jobs.map((job: any) => `- ${job.title} at ${job.company}`).join('\n'));
+				if (jobsRes.ok && jobsData.success) {
+    				setJobsByCompany(jobsData.results);
+					setSuccess(true);
+					setTimeout(() => setSuccess(false), 5000);
 				} else {
-					alert('No recommended jobs found.');
+					console.error('❌ Failed to fetch jobs:', jobsData);
+					setError(true);
+					setTimeout(() => setError(false), 5000);
 				}
-				setSuccess(true);
-				setTimeout(() => setSuccess(false), 5000);
 			} else {
 				console.error('❌ Failed to generate wishlist:', data);
 				setError(true);
@@ -113,6 +138,19 @@ const WishlistGenerator = () => {
 		setWishlistCompanies((prev) =>
 			prev.filter((company) => company.id !== companyId)
 		);
+	};
+
+	const getJobCountForCompany = (companyName: string) => {
+  		const group = jobsByCompany.find(
+    		(g) => g.company.toLowerCase().includes(companyName.toLowerCase()) ||
+    		companyName.toLowerCase().includes(g.company.toLowerCase())
+  		);
+  		return group ? group.jobs.length : 0;
+	};
+
+	const handleCompanyClick = (company: Company) => {
+		setSelectedCompany(company);
+		setIsJobsModalOpen(true);
 	};
 
 	return (
@@ -207,7 +245,20 @@ const WishlistGenerator = () => {
 								<option value="United Kingdom">United Kingdom</option>
 							</select>
 						</div>
+
+						{/* Role Keywords Input */}
+						<div className="filter-group">
+							<label htmlFor="roleKeywords">Role keywords</label>
+							<input
+								id="roleKeywords"
+								type="text"
+								placeholder="e.g. software engineer, backend developer"
+								value={roleKeywords}
+								onChange={(e) => setRoleKeywords(e.target.value)}
+							/>
+						</div>
 					</div>
+					
 
 					<button type="submit" className="generate-btn" disabled={loading}>
 						<span className={loading ? 'btn-hidden' : ''}>Generate Wishlist</span>
@@ -255,11 +306,63 @@ const WishlistGenerator = () => {
 								<WishlistCard
 									key={company.id}
 									company={company}
+									jobCount={getJobCountForCompany(company.name)}
+									onClick={() => handleCompanyClick(company)}
 									onDelete={handleDeleteCompany}
 								/>
 							))}
 						</div>
 					</div>
+				)}
+				{/* Jobs Modal */}
+				{isJobsModalOpen && selectedCompany && (
+					<>
+						<div
+							className="jobs-modal-overlay"
+							onClick={() => setIsJobsModalOpen(false)}
+						>
+							<div
+								className="jobs-modal"
+								onClick={(e) => e.stopPropagation()} // prevent overlay click
+							>
+								<button
+									className="jobs-modal-close"
+									onClick={() => setIsJobsModalOpen(false)}
+								>
+									✕
+								</button>
+
+								<h3>Open roles at {selectedCompany.name}</h3>
+
+								{(() => {
+									const group = jobsByCompany.find(
+										(g) =>
+											g.company.toLowerCase().includes(selectedCompany.name.toLowerCase()) ||
+											selectedCompany.name.toLowerCase().includes(g.company.toLowerCase())
+									);
+									const jobs = group ? group.jobs : [];
+									
+									if (jobs.length === 0) {
+										return <p>No matching roles found for your keywords.</p>;
+									}
+									
+									return (
+										<ul className="jobs-modal-list">
+											{jobs.map((job) => (
+												<li key={job.id} className="jobs-modal-item">
+													<a href={job.url} target="_blank" rel="noreferrer">
+													{job.job_title}
+													</a>{' '}
+													– {job.location ?? 'Location not specified'} –{' '}
+													{job.job_seniority ?? 'Seniority N/A'}
+												</li>
+											))}
+										</ul>
+									);
+								})()}
+							</div>
+						</div>
+					</>
 				)}
 			</div>
 		</section>
