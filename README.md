@@ -2,6 +2,10 @@
 
 The client side of Job Genie — a tool that helps you build a shortlist of companies you'd actually want to work at, and surfaces open roles at each of them.
 
+## Live Demo
+
+https://job-genie-frontend-i50i.onrender.com
+
 ## Features
 
 - Sign up or log in with Google or email/password
