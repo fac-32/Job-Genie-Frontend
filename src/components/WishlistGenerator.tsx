@@ -88,6 +88,7 @@ const WishlistGenerator = () => {
 				headers: {
 					'Content-Type': 'application/json',
 				},
+				credentials: 'include',
 			});
 
 			const data: WishlistResponse = await response.json();
@@ -103,6 +104,7 @@ const WishlistGenerator = () => {
 				const jobsRes = await fetch(`${API_BASE_URL}/jobs`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
+					credentials: 'include',
 					body: JSON.stringify({
 						postedAt: 7,
 						companies: data.companies,
